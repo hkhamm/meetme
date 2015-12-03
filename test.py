@@ -12,8 +12,7 @@ def get_meeting_times_1_test():
     """
     Tests a single day with one free time starting and ending on an hour.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T15:00:00-08:00'}}]
+    free_times = [('2015-11-17T09:00:00-08:00', '2015-11-17T15:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
@@ -36,8 +35,7 @@ def get_meeting_times_2_test():
     Tests a single day with one free time starting on a hour and ending on a
     minute.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T15:30:00-08:00'}}]
+    free_times = [('2015-11-17T09:00:00-08:00', '2015-11-17T15:30:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
@@ -60,8 +58,7 @@ def get_meeting_times_3_test():
     Tests a single day with one free time starting on a minute and ending on a
     hour.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T09:30:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T15:00:00-08:00'}}]
+    free_times = [('2015-11-17T09:30:00-08:00', '2015-11-17T15:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T10:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T11:00:00-08:00'}},
@@ -81,10 +78,8 @@ def get_meeting_times_4_test():
     """
     Tests a single day with two free times starting and ending on hours.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-17T11:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T15:00:00-08:00'}}]
+    free_times = [('2015-11-17T09:00:00-08:00', '2015-11-17T10:00:00-08:00'),
+                  ('2015-11-17T11:00:00-08:00', '2015-11-17T15:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
@@ -104,10 +99,8 @@ def get_meeting_times_5_test():
     """
     Tests two days with one free time each starting and ending on hours.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T11:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-18T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-18T11:00:00-08:00'}}]
+    free_times = [('2015-11-17T09:00:00-08:00', '2015-11-17T11:00:00-08:00'),
+                  ('2015-11-18T09:00:00-08:00', '2015-11-18T11:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
@@ -125,8 +118,7 @@ def get_meeting_times_6_test():
     """
     Tests a multi-day free time starting and ending on an hour.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-18T17:00:00-08:00'}}]
+    free_times = [('2015-11-17T09:00:00-08:00', '2015-11-18T17:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
@@ -168,8 +160,7 @@ def get_meeting_times_7_test():
     """
     Tests a multi-day free time ending on an hour before second day's end.
     """
-    free_times = [{'start': {'dateTime': '2015-11-17T16:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-18T10:00:00-08:00'}}]
+    free_times = [('2015-11-17T16:00:00-08:00', '2015-11-18T10:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-17T16:00:00-08:00'},
                       'end': {'dateTime': '2015-11-17T17:00:00-08:00'}},
@@ -183,18 +174,12 @@ def get_meeting_times_8_test():
     """
     Tests multiple free times on different days.
     """
-    free_times = [{'start': {'dateTime': '2015-11-16T09:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-16T10:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-16T13:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-16T15:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-16T16:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-16T17:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-17T10:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-17T11:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-17T16:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-18T10:00:00-08:00'}},
-                  {'start': {'dateTime': '2015-11-18T11:00:00-08:00'},
-                   'end': {'dateTime': '2015-11-18T14:00:00-08:00'}}]
+    free_times = [('2015-11-16T09:00:00-08:00', '2015-11-16T10:00:00-08:00'),
+                  ('2015-11-16T13:00:00-08:00', '2015-11-16T15:00:00-08:00'),
+                  ('2015-11-16T16:00:00-08:00', '2015-11-16T17:00:00-08:00'),
+                  ('2015-11-17T10:00:00-08:00', '2015-11-17T11:00:00-08:00'),
+                  ('2015-11-17T16:00:00-08:00', '2015-11-18T10:00:00-08:00'),
+                  ('2015-11-18T11:00:00-08:00', '2015-11-18T14:00:00-08:00')]
 
     meeting_times = [{'start': {'dateTime': '2015-11-16T09:00:00-08:00'},
                       'end': {'dateTime': '2015-11-16T10:00:00-08:00'}},

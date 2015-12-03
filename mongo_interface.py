@@ -1,14 +1,6 @@
 import flask
 import sys
-
-# Date handling
-import arrow  # Replacement for datetime, based on moment.js
-import datetime  # But we may still need time
-from dateutil import tz  # For interpreting local times
-
-# Mongo database
 from pymongo import MongoClient
-from bson import ObjectId
 
 import CONFIG
 
@@ -75,7 +67,7 @@ def remove_all_times_db():
         message = 'times not removed'
         result = False
 
-    print(message)
+    # print(message)
 
     return flask.jsonify(message=message, result=result)
 
@@ -144,4 +136,4 @@ def remove_date_range_db():
     except:
         message = 'date range not removed'
 
-    print(message)
+    # print(message)
