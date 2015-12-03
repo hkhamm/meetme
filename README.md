@@ -1,5 +1,7 @@
-# proj7-freetimes
-Calculates busy and free times using fetched appointment data from a selection of a user's Google calendars.
+# proj8-freetimes
+Calculates a list of hour long meeting times from multiple users Google calendar events. Provides pages to create a new meeting proposal, add additional times, and to choose a meeting time or destroy the meeting proposal.
+
+This can be made available at http://ix.cs.uoregon.edu:7420 upon request.
 
 ### Installation and Execution
 
