@@ -69,8 +69,7 @@ action.
 
 {# Shows the free times for the selected calendar(s).#}
 {% if session.free_times is defined %}
-  <form action="{{ url_for('clear_session') }}" method="post">
-    <label for="free-times">Current Available Times</label>
+  <label for="free-times">Current Available Times</label>
     <p>These are the current available times for all submitted events.</p>
     <ul class="list-group" id="free-times">
     {% for interval in session.free_times %}
@@ -79,7 +78,6 @@ action.
       </li>
     {% endfor %}
     </ul>
-  </form>
   <hr>
 {% endif %}
 

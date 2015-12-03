@@ -35,19 +35,19 @@ except:
 # except:
 #     print('not inserted')
 
-# try:
-#     record = {"type": "busy_times"}
-#     result = collection.delete_many(record)
-#     print('busy_times removed')
-# except:
-#     print('busy_times not removed')
-#
-# try:
-#     record = {"type": "date_range"}
-#     result = collection.delete_many(record)
-#     print('date_range removed')
-# except:
-#     print('date_range not removed')
+try:
+    record = {"type": "busy_times"}
+    result = collection.delete_many(record)
+    print('busy_times removed')
+except:
+    print('busy_times not removed')
+
+try:
+    record = {"type": "date_range"}
+    result = collection.delete_many(record)
+    print('date_range removed')
+except:
+    print('date_range not removed')
 
 busy_times = []
 for record in collection.find({"type": "busy_times"}):

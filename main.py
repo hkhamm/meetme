@@ -45,8 +45,7 @@ def index():
 @app.route('/add-times')
 def add_times():
     app.logger.debug('Entering add_times')
-    if 'main-page' not in flask.session:
-        init_other_session_values('add-times.html')
+    init_other_session_values('add-times.html')
     return render_template('add-times.html')
 
 
