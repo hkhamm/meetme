@@ -1,14 +1,7 @@
-# Gmail
-import base64
-from email.mime.text import MIMEText
-
 import flask
 from flask import Flask
 from flask import render_template
 from flask import request
-
-# Flask-Mail
-from flask.ext.mail import Mail, Message
 
 import logging
 import uuid
@@ -36,11 +29,6 @@ app = flask.Flask(__name__)
 app.secret_key = str(uuid.uuid4())
 app.debug = CONFIG.DEBUG
 app.logger.setLevel(logging.DEBUG)
-
-# Mail
-app.config['MAIL_SERVER'] = CONFIG.MAIL_SERVER
-app.config['DEFAULT_MAIL_SENDER'] = CONFIG.DEFAULT_MAIL_SENDER
-mail = Mail(app)
 
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 CLIENT_SECRET_FILE = CONFIG.GOOGLE_LICENSE_KEY  # You'll need this
@@ -336,37 +324,6 @@ def set_meeting_time():
     return render_template(flask.session['main-page'])
 
 
-@app.route('/send-mail', methods=['POST'])
-def send_mail():
-    """
-    Sends the body to the recipients.
-    :return:
-    """
-    recipients = flask.session['recipients']
-    subject = request.form.get('subject')
-    body = request.form.get('message-body')
-
-    # app.logger.debug('Checking credentials for Gmail access')
-    # credentials = valid_credentials()
-    #
-    # if not credentials:
-    #     app.logger.debug('Redirecting to authorization')
-    #     return flask.redirect(flask.url_for('oauth2callback'))
-    #
-    # gmail_service = get_gmail_service(credentials)
-    # app.logger.debug('Returned from get_gcal_service')
-    #
-    # for recipient in recipients:
-    #     message = create_message('hkhamm@gmail.com', recipient, subject, body)
-    #     send_message(gmail_service, 'me', message)
-
-    message = Message(subject=subject, body=body,
-                      sender='hhamm@uoregon.edu',
-                      recipients=recipients)
-    mail.send(message)
-    return render_template(flask.session['main-page'])
-
-
 #  Initialize session variables
 
 def init_index_session_values():
@@ -498,42 +455,6 @@ def next_day(iso_text):
     as_arrow = arrow.get(iso_text)
 
     return as_arrow.replace(days=+1).isoformat()
-
-
-#  Functions (NOT pages) that return some information
-# def create_message(sender, to, subject, message_text):
-#     """
-#     Create a message for an email.
-#     :param sender: Email address of the sender.
-#     :param to: Email address of the receiver.
-#     :param subject: The subject of the email message.
-#     :param message_text: The text of the email message.
-#     :return: an object containing a base64url encoded email object.
-#     """
-#     message = MIMEText(message_text)
-#     message['to'] = to
-#     message['from'] = sender
-#     message['subject'] = subject
-#
-#     return {'raw': base64.urlsafe_b64encode(message.as_string())}
-#
-#
-# def send_message(service, user_id, message):
-#     """
-#     Sends an email message.
-#     :param service: Authorized Gmail API service instance.
-#     :param user_id: User's email address. The special value "me" can be used
-#     to indicate the authenticated user.
-#     :param message: Message to be sent.
-#     :return: the sent message.
-#     """
-#     try:
-#         message = (service.users().messages().send(
-#             userId=user_id, body=message).execute())
-#         print('Message Id: %s' % message['id'])
-#         return message
-#     except:
-#         print('failed to send message')
 
 
 def list_times(service):

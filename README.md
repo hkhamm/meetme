@@ -45,18 +45,7 @@ Follow the instructions in the web app.
 
 - [Python 3](http://www.python.org)
 - [Flask](http://flask.pocoo.org/)
-- [Flask-Mail](https://pythonhosted.org/Flask-Mail/)
 - [Pymongo](https://api.mongodb.org/python/current/)
 - [Arrow](http://crsmithdev.com/arrow/)
 - [Google oauth2client](https://github.com/google/oauth2client)
 - [Google API Client Library for Python](https://developers.google.com/api-client-library/python/)
-
-
-### Other Comments
-
-Flask-Mail is pretty straight forward to use, though their docs mistakenly 
-list the import as 'from flaskext.mail import Mail' when it should be 'from 
-flask.ext.mail import Mail'.
-
-Other than this problem, I only had to copy their sample and modify the 
-message for my context. 
