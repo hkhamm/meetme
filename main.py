@@ -38,8 +38,6 @@ app.logger.setLevel(logging.DEBUG)
 # Mail
 app.config['MAIL_SERVER'] = 'smtp.uoregon.edu'
 app.config['DEFAULT_MAIL_SENDER'] = 'hhamm@uoregon.edu'
-app.config['MAIL_USERNAME'] = 'hhamm'
-app.config['MAIL_PASSWORD'] = 'Purple-space'
 mail = Mail(app)
 
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
