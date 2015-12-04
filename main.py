@@ -1,6 +1,15 @@
+# Gmail
+import base64
+from email.mime.text import MIMEText
+
 import flask
+from flask import Flask
 from flask import render_template
 from flask import request
+
+# Flask-Mail
+from flask.ext.mail import Mail, Message
+
 import logging
 import uuid
 
@@ -26,12 +35,19 @@ app.secret_key = str(uuid.uuid4())
 app.debug = CONFIG.DEBUG
 app.logger.setLevel(logging.DEBUG)
 
+# Mail
+app.config['MAIL_SERVER'] = 'smtp.uoregon.edu'
+app.config['DEFAULT_MAIL_SENDER'] = 'hhamm@uoregon.edu'
+app.config['MAIL_USERNAME'] = 'hhamm'
+app.config['MAIL_PASSWORD'] = 'Purple-space'
+mail = Mail(app)
+
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
 CLIENT_SECRET_FILE = CONFIG.GOOGLE_LICENSE_KEY  # You'll need this
 APPLICATION_NAME = 'MeetMe'
 
-
 # Pages (routed from URLs)
+
 
 @app.route('/')
 @app.route('/index')
@@ -39,23 +55,36 @@ def index():
     app.logger.debug('Entering index')
     if 'main-page' not in flask.session:
         init_index_session_values()
+
     return render_template('index.html')
 
 
 @app.route('/add-times')
 def add_times():
     app.logger.debug('Entering add_times')
-    init_other_session_values('add-times.html')
+    redirect = init_other_session_values('add-times.html', 'add_times')
+    if redirect:
+        return flask.redirect(flask.url_for('proposal_not_found'))
     return render_template('add-times.html')
 
 
 @app.route('/finalize-meeting')
 def finalize_meeting():
     app.logger.debug('Entering finalize_meeting')
-    init_other_session_values('finalize-meeting.html')
+    # if 'key' not in flask.session:
+    redirect = init_other_session_values('finalize-meeting.html',
+                                         'finalize_meeting')
+    if redirect:
+        return flask.redirect(flask.url_for('proposal_not_found'))
     init_times_list()
     init_meeting_times()
     return render_template('finalize-meeting.html')
+
+
+@app.route('/proposal-not-found')
+def proposal_not_found():
+    app.logger.debug('Entering proposal_not_found')
+    return render_template('proposal-not-found.html')
 
 
 @app.route('/choose')
@@ -98,8 +127,6 @@ def get_times():
 
     flask.session['busy_times'], flask.session['free_times'] = list_times(
         gcal_service)
-
-    # get_times_db()
 
     return render_template(flask.session['main-page'])
 
@@ -159,6 +186,7 @@ def get_gcal_service(credentials):
     end up redirected back to /choose *without a service object*.
     Then the second call will succeed without additional authorization.
     :param credentials: a Google OAuth2 credentials object
+    :return: the service object.
     """
     app.logger.debug('Entering get_gcal_service')
     http_auth = credentials.authorize(httplib2.Http())
@@ -166,6 +194,20 @@ def get_gcal_service(credentials):
     app.logger.debug('Returning service')
 
     return service
+
+
+# def get_gmail_service(credentials):
+#     """
+#     Gets the Gmail service object.
+#     :param credentials: is a Google OAuth2 credentials object.
+#     :return: the service object.
+#     """
+#     app.logger.debug('Entering get_gmail_service')
+#     http_auth = credentials.authorize(httplib2.Http())
+#     service = discovery.build('gmail', 'v1', http=http_auth)
+#     app.logger.debug('Returning service')
+#
+#     return service
 
 
 @app.route('/oauth2callback')
@@ -225,7 +267,6 @@ def set_range():
     :return: redirects to the choose page
     """
     app.logger.debug('Entering set_range')
-    # flask.flash('Setrange gave us '{}''.format(request.form.get('daterange')))
 
     daterange = request.form.get('daterange')
     flask.session['daterange'] = daterange
@@ -270,6 +311,62 @@ def destroy_proposal():
     return flask.redirect(flask.url_for('index'))
 
 
+@app.route('/add-recipient', methods=['POST'])
+def add_recipient():
+    recipient = request.form.get('recipient_address')
+    if recipient != '':
+        flask.session['recipients'].append(recipient)
+    return render_template(flask.session['main-page'])
+
+
+@app.route('/remove-recipient', methods=['POST'])
+def remove_recipient():
+    recipient = request.form.get('recipient_address')
+    # print('recipient {}'.format(recipient))
+    flask.session['recipients'].remove(recipient)
+    return render_template(flask.session['main-page'])
+
+
+@app.route('/set-meeting-time', methods=['POST'])
+def set_meeting_time():
+    app.logger.debug('Entering set_meeting_time')
+    meeting_time = request.form['meeting_times']
+    print('meeting_time {}'.format(meeting_time))
+    flask.session['meeting_time'] = meeting_time
+    return render_template(flask.session['main-page'])
+
+
+@app.route('/send-mail', methods=['POST'])
+def send_mail():
+    """
+    Sends the body to the recipients.
+    :return:
+    """
+    recipients = flask.session['recipients']
+    subject = request.form.get('subject')
+    body = request.form.get('message-body')
+
+    # app.logger.debug('Checking credentials for Gmail access')
+    # credentials = valid_credentials()
+    #
+    # if not credentials:
+    #     app.logger.debug('Redirecting to authorization')
+    #     return flask.redirect(flask.url_for('oauth2callback'))
+    #
+    # gmail_service = get_gmail_service(credentials)
+    # app.logger.debug('Returned from get_gcal_service')
+    #
+    # for recipient in recipients:
+    #     message = create_message('hkhamm@gmail.com', recipient, subject, body)
+    #     send_message(gmail_service, 'me', message)
+
+    message = Message(subject=subject, body=body,
+                      sender='hhamm@uoregon.edu',
+                      recipients=recipients)
+    mail.send(message)
+    return render_template(flask.session['main-page'])
+
+
 #  Initialize session variables
 
 def init_index_session_values():
@@ -277,8 +374,11 @@ def init_index_session_values():
     Start with some reasonable defaults for date and time ranges.
     Note this must be run in app context ... can't call from main.
     """
+    app.logger.debug('Entering init_index_session_values')
     flask.session['main-page'] = 'index.html'
+    flask.session['main-route'] = 'index'
     flask.session['key'] = str(uuid.uuid4())
+    flask.session['recipients'] = []
 
     # Default date span = tomorrow to 1 week from now
     now = arrow.now('local')
@@ -296,15 +396,24 @@ def init_index_session_values():
     flask.session['end_time'] = interpret_time('5pm')
 
 
-def init_other_session_values(main_page):
+def init_other_session_values(main_page, main_route):
     """
     Initializes the date range, begin and end dates, and begin and end times.
     :param main_page: is the main page for this session.
+    :param main_route: is the main route for this session.
     """
+    app.logger.debug('Entering init_other_session_values')
     flask.session['main-page'] = main_page
-    flask.session['key'] = request.args.get('key', 0, type=str)
+    flask.session['main-route'] = main_route
+    flask.session['recipients'] = []
 
-    date_range = get_date_range_db()
+    try:
+        flask.session['key'] = request.args.get('key', 0, type=str)
+        date_range = get_date_range_db()
+    except:
+        app.logger.debug('Key not found, redirecting to proposal_not_found')
+        return True
+
     start = arrow.get(date_range['start'])
     end = arrow.get(date_range['end'])
 
@@ -316,6 +425,8 @@ def init_other_session_values(main_page):
     # Default time span each day, 9 to 5
     flask.session['begin_time'] = interpret_time('9am')
     flask.session['end_time'] = interpret_time('5pm')
+
+    return False
 
 
 def init_times_list():
@@ -390,6 +501,41 @@ def next_day(iso_text):
 
 
 #  Functions (NOT pages) that return some information
+# def create_message(sender, to, subject, message_text):
+#     """
+#     Create a message for an email.
+#     :param sender: Email address of the sender.
+#     :param to: Email address of the receiver.
+#     :param subject: The subject of the email message.
+#     :param message_text: The text of the email message.
+#     :return: an object containing a base64url encoded email object.
+#     """
+#     message = MIMEText(message_text)
+#     message['to'] = to
+#     message['from'] = sender
+#     message['subject'] = subject
+#
+#     return {'raw': base64.urlsafe_b64encode(message.as_string())}
+#
+#
+# def send_message(service, user_id, message):
+#     """
+#     Sends an email message.
+#     :param service: Authorized Gmail API service instance.
+#     :param user_id: User's email address. The special value "me" can be used
+#     to indicate the authenticated user.
+#     :param message: Message to be sent.
+#     :return: the sent message.
+#     """
+#     try:
+#         message = (service.users().messages().send(
+#             userId=user_id, body=message).execute())
+#         print('Message Id: %s' % message['id'])
+#         return message
+#     except:
+#         print('failed to send message')
+
+
 def list_times(service):
     """
     Lists the times from the selected calendar in ascending order.
