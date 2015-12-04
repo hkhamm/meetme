@@ -29,6 +29,8 @@ from free_times import get_free_times
 from meeting_times import get_meeting_times
 from mongo_interface import *
 
+import CONFIG
+
 # Globals
 app = flask.Flask(__name__)
 app.secret_key = str(uuid.uuid4())
@@ -36,8 +38,8 @@ app.debug = CONFIG.DEBUG
 app.logger.setLevel(logging.DEBUG)
 
 # Mail
-app.config['MAIL_SERVER'] = 'smtp.uoregon.edu'
-app.config['DEFAULT_MAIL_SENDER'] = 'hhamm@uoregon.edu'
+app.config['MAIL_SERVER'] = CONFIG.MAIL_SERVER
+app.config['DEFAULT_MAIL_SENDER'] = CONFIG.DEFAULT_MAIL_SENDER
 mail = Mail(app)
 
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
