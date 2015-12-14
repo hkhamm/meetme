@@ -70,8 +70,8 @@ def get_meeting_times(free_times):
 
                 add_hour_intervals(meeting_times, hours, meeting_end_time)
 
-    for time in meeting_times:
-        print(time)
+    # for time in meeting_times:
+    #     print(time)
 
     return meeting_times
 
