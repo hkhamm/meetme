@@ -121,5 +121,8 @@ def get_free_times(busy_times, begin_date, end_date):
             stored_event = event
 
     # print()
+    # print('free times')
+    # for time in free_times:
+    #     print(time)
 
     return free_times

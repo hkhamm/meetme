@@ -38,6 +38,7 @@ def get_busy_dict(events, begin_date, end_date):
     # print('busy times')
 
     for event in events:
+        # print(event)
         available = is_available(event)
         event_start, event_end, is_all_day = get_start_end_datetime(event)
         day_start = event_start.replace(hour=START_TIME, minute=0)
@@ -80,6 +81,9 @@ def get_busy_dict(events, begin_date, end_date):
             busy_dict[event['start']['dateTime']] = event
 
     # print()
+    # print('busy dict')
+    # for time in busy_dict:
+    #     print(time)
 
     return busy_dict
 
@@ -125,6 +129,10 @@ def get_busy_list(busy_dict):
     for i in sorted(busy_dict):
         if busy_dict[i] not in remove_list:
             busy.append(busy_dict[i])
+
+    # print('busy times')
+    # for time in busy:
+    #     print(time)
 
     return busy
 
