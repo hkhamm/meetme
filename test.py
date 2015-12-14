@@ -575,7 +575,7 @@ def get_free_times_1_test():
 
     busy = []
 
-    free = [('2015-11-16T09:00:00-08:00', '2015-11-20T17:00:00-08:00')]
+    free = []
 
     assert free == get_free_times(busy, begin_date, end_date)
 
