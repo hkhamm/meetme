@@ -16,18 +16,18 @@ def get_free_times(busy_times, begin_date, end_date):
     """
     free_times = []
     busy_times_original = busy_times
+    begin_date = arrow.get(begin_date).replace(hour=9)
+    end_date = arrow.get(end_date).replace(hour=17)
 
-    # print('free times')
+    print('free times')
 
     if len(busy_times) == 0:
-        free_times.append((begin_date, end_date))
+        free_times.append((begin_date.isoformat(), end_date.isoformat()))
     else:
-        begin_date = arrow.get(begin_date).replace(hour=9)
         begin_date_end = begin_date.replace(hour=17)
         begin_day = begin_date.format('YYYYMMDD')
         begin_time = '09:00'
         end_time = '17:00'
-        end_date = arrow.get(end_date).replace(hour=17)
         end_date_start = arrow.get(end_date).replace(hour=9)
         end_day = end_date.format('YYYYMMDD')
         stored_event = busy_times[0]
@@ -72,8 +72,8 @@ def get_free_times(busy_times, begin_date, end_date):
                     stored_event_start_time > begin_time):
                 free_times.append((begin_date.isoformat(),
                                    stored_event_start.isoformat()))
-                # print('0 {} - {}'.format(begin_date.isoformat(),
-                #                          stored_event_start.isoformat()))
+                print('0 {} - {}'.format(begin_date.isoformat(),
+                                         stored_event_start.isoformat()))
 
             # middle free times
             if (stored_event_end < event_start and
@@ -89,15 +89,15 @@ def get_free_times(busy_times, begin_date, end_date):
                                                   hour=START_TIME).isoformat()
 
                 free_times.append((stored_event_end, event_start))
-                # print('1 {} - {}'.format(stored_event_end,
-                #                          event_start))
+                print('1 {} - {}'.format(stored_event_end,
+                                         event_start))
 
             # ending free time
             if (event_end_day == end_day and
                     event_end_time != end_time):
                 free_times.append((event_end.isoformat(), end_date.isoformat()))
-                # print('2 {} - {}'.format(event_end.isoformat(),
-                #                          end_date.isoformat()))
+                print('2 {} - {}'.format(event_end.isoformat(),
+                                         end_date.isoformat()))
 
             # ending free time for final events that end before end_date
             if (busy_times.index(event) == len(busy_times) - 1 and
@@ -105,8 +105,8 @@ def get_free_times(busy_times, begin_date, end_date):
                 if event_end_time == '17:00':
                     event_end = event_end.replace(days=+1, hour=START_TIME)
                 free_times.append((event_end.isoformat(), end_date.isoformat()))
-                # print('3 {} - {}'.format(event_end.isoformat(),
-                #                          end_date.isoformat()))
+                print('3 {} - {}'.format(event_end.isoformat(),
+                                         end_date.isoformat()))
 
             # starting free time not on begin day
             if (arrow.get(free_times[0][0]) != begin_date and
@@ -115,11 +115,11 @@ def get_free_times(busy_times, begin_date, end_date):
                         busy_times_original[0]['start']['dateTime'])):
                 free_times.insert(0, (begin_date.isoformat(),
                                       stored_event_start.isoformat()))
-                # print('4 {} - {}'.format(begin_date.isoformat(),
-                #                          stored_event_start.isoformat()))
+                print('4 {} - {}'.format(begin_date.isoformat(),
+                                         stored_event_start.isoformat()))
 
             stored_event = event
 
-    # print()
+    print()
 
     return free_times

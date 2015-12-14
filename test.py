@@ -205,6 +205,32 @@ def get_meeting_times_8_test():
     assert meeting_times == get_meeting_times(free_times)
 
 
+def get_meeting_times_9_test():
+    """
+    Tests one day with free time all day.
+    """
+    free_times = [('2015-11-17T09:00:00-08:00', '2015-11-17T17:00:00-08:00')]
+
+    meeting_times = [{'start': {'dateTime': '2015-11-17T09:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T10:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T10:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T11:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T11:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T12:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T12:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T13:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T13:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T14:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T14:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T15:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T15:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T16:00:00-08:00'}},
+                     {'start': {'dateTime': '2015-11-17T16:00:00-08:00'},
+                      'end': {'dateTime': '2015-11-17T17:00:00-08:00'}}]
+
+    assert meeting_times == get_meeting_times(free_times)
+
+
 def get_busy_dict_1_test():
     """
     Tests all day events that start before and end during the interval.
