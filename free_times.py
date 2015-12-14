@@ -20,7 +20,7 @@ def get_free_times(busy_times, begin_date, end_date):
     # print('free times')
 
     if len(busy_times) == 0:
-        free_times.append((begin_date.isoformat(), end_date.isoformat()))
+        free_times.append((begin_date, end_date))
     else:
         begin_date = arrow.get(begin_date).replace(hour=9)
         begin_date_end = begin_date.replace(hour=17)
